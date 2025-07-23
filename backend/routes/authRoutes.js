@@ -1,4 +1,3 @@
-
 const express = require('express');
 const AuthController = require('../controllers/authController');
 const authMiddleware = require('../middleware/auth');
