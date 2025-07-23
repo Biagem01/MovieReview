@@ -15,31 +15,29 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <div className="container">
-        <div className="navbar-content">
-          <Link to="/" className="navbar-brand">
-            MovieReview
-          </Link>
+      <div className="nav-container">
+        <Link to="/" className="nav-logo">
+          🎬 MovieReviews
+        </Link>
+        
+        <div className="nav-menu">
+          <Link to="/" className="nav-link">Home</Link>
           
-          <div className="navbar-menu">
-            <Link to="/" className="navbar-link">Home</Link>
-            
-            {currentUser ? (
-              <>
-                <Link to="/favorites" className="navbar-link">Favorites</Link>
-                <Link to="/watchlist" className="navbar-link">Watchlist</Link>
-                <Link to="/profile" className="navbar-link">Profile</Link>
-                <button onClick={handleLogout} className="btn btn-primary">
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link to="/login" className="btn btn-primary">Login</Link>
-                <Link to="/register" className="btn btn-primary">Register</Link>
-              </>
-            )}
-          </div>
+          {currentUser ? (
+            <>
+              <Link to="/favorites" className="nav-link">Favorites</Link>
+              <Link to="/watchlist" className="nav-link">Watchlist</Link>
+              <Link to="/profile" className="nav-link">Profile</Link>
+              <button onClick={handleLogout} className="nav-link logout-btn">
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="nav-link">Login</Link>
+              <Link to="/register" className="nav-link">Register</Link>
+            </>
+          )}
         </div>
       </div>
     </nav>

@@ -1,4 +1,3 @@
-
 const Movie = require('../models/Movie');
 const axios = require('axios');
 
@@ -10,9 +9,9 @@ class MovieController {
     try {
       const page = req.query.page || 1;
       const genre = req.query.genre;
-      
+
       let url = `${TMDB_BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}&page=${page}`;
-      
+
       if (genre) {
         url = `${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&page=${page}&with_genres=${genre}`;
       }
@@ -49,15 +48,15 @@ class MovieController {
   static async getMovieDetails(req, res) {
     try {
       const { id } = req.params;
-      
+
       // Try to get from database first
       let movie = await Movie.findById(id);
-      
+
       if (!movie) {
         // Fetch from TMDB API
         const response = await axios.get(`${TMDB_BASE_URL}/movie/${id}?api_key=${TMDB_API_KEY}`);
         const movieData = response.data;
-        
+
         // Cache in database
         await Movie.create({
           id: movieData.id,
@@ -70,7 +69,7 @@ class MovieController {
           vote_count: movieData.vote_count,
           genre_ids: movieData.genres.map(g => g.id)
         });
-        
+
         movie = movieData;
       }
 
@@ -84,13 +83,13 @@ class MovieController {
   static async searchMovies(req, res) {
     try {
       const { query, page = 1 } = req.query;
-      
+
       if (!query) {
         return res.status(400).json({ message: 'Search query is required' });
       }
 
       const response = await axios.get(`${TMDB_BASE_URL}/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&page=${page}`);
-      
+
       res.json({
         movies: response.data.results,
         total_pages: response.data.total_pages,

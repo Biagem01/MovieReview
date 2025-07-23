@@ -2,6 +2,9 @@
 const db = require('../config/database');
 const bcrypt = require('bcryptjs');
 
+const db = require('../config/database');
+const bcrypt = require('bcryptjs');
+
 class User {
   static async create(userData) {
     const { username, email, password } = userData;
@@ -58,5 +61,7 @@ class User {
     return await bcrypt.compare(plainPassword, hashedPassword);
   }
 }
+
+module.exports = User;
 
 module.exports = User;

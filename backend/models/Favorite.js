@@ -1,6 +1,8 @@
 
 const db = require('../config/database');
 
+const db = require('../config/database');
+
 class Favorite {
   static async add(user_id, movie_id) {
     try {
@@ -46,5 +48,7 @@ class Favorite {
     return rows.length > 0;
   }
 }
+
+module.exports = Favorite;
 
 module.exports = Favorite;

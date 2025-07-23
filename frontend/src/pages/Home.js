@@ -2,23 +2,24 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MovieCard from '../components/MovieCard';
-import SearchBar from '../components/SearchBar';
-import GenreFilter from '../components/GenreFilter';
-import Pagination from '../components/Pagination';
+import './Home.css';
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
   const [genres, setGenres] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [selectedGenre, setSelectedGenre] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedGenre, setSelectedGenre] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchGenres();
     fetchMovies();
-  }, [currentPage, searchQuery, selectedGenre]);
+  }, []);
+
+  useEffect(() => {
+    fetchMovies();
+  }, [selectedGenre, currentPage]);
 
   const fetchGenres = async () => {
     try {
@@ -32,14 +33,12 @@ const Home = () => {
   const fetchMovies = async () => {
     setLoading(true);
     try {
-      let url = '';
-      if (searchQuery) {
-        url = `/api/movies/search?query=${encodeURIComponent(searchQuery)}&page=${currentPage}`;
-      } else {
-        url = `/api/movies/popular?page=${currentPage}`;
-      }
-
-      const response = await axios.get(url);
+      const params = {
+        page: currentPage,
+        ...(selectedGenre && { genre: selectedGenre })
+      };
+      
+      const response = await axios.get('/api/movies/popular', { params });
       setMovies(response.data.movies);
       setTotalPages(response.data.total_pages);
     } catch (error) {
@@ -49,52 +48,56 @@ const Home = () => {
     }
   };
 
-  const handleSearch = (query) => {
-    setSearchQuery(query);
-    setCurrentPage(1);
-  };
-
   const handleGenreChange = (genreId) => {
     setSelectedGenre(genreId);
     setCurrentPage(1);
   };
 
-  const filteredMovies = selectedGenre 
-    ? movies.filter(movie => movie.genre_ids?.includes(parseInt(selectedGenre)))
-    : movies;
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo(0, 0);
+  };
+
+  if (loading) {
+    return <div className="loading">Loading movies...</div>;
+  }
 
   return (
-    <div className="container">
+    <div className="home">
       <h1>Popular Movies</h1>
       
-      <SearchBar onSearch={handleSearch} />
-      <GenreFilter 
-        genres={genres} 
-        selectedGenre={selectedGenre}
-        onGenreChange={handleGenreChange}
-      />
+      <div className="filters">
+        <select 
+          value={selectedGenre} 
+          onChange={(e) => handleGenreChange(e.target.value)}
+          className="genre-select"
+        >
+          <option value="">All Genres</option>
+          {genres.map(genre => (
+            <option key={genre.id} value={genre.id}>
+              {genre.name}
+            </option>
+          ))}
+        </select>
+      </div>
 
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <>
-          <div className="movie-grid">
-            {filteredMovies.map(movie => (
-              <MovieCard key={movie.id} movie={movie} />
-            ))}
-          </div>
-          
-          {filteredMovies.length === 0 && (
-            <div>No movies found.</div>
-          )}
+      <div className="movies-grid">
+        {movies.map(movie => (
+          <MovieCard key={movie.id} movie={movie} />
+        ))}
+      </div>
 
-          <Pagination 
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </>
-      )}
+      <div className="pagination">
+        {Array.from({ length: Math.min(10, totalPages) }, (_, i) => i + 1).map(page => (
+          <button
+            key={page}
+            onClick={() => handlePageChange(page)}
+            className={`page-btn ${currentPage === page ? 'active' : ''}`}
+          >
+            {page}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

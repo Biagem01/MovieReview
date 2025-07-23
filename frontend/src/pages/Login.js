@@ -2,86 +2,68 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import './Auth.css';
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
+    setLoading(true);
 
-    const result = await login(formData.email, formData.password);
+    const result = await login(email, password);
     
     if (result.success) {
       navigate('/');
     } else {
-      setError(result.error);
+      setError(result.message);
     }
     
     setLoading(false);
   };
 
   return (
-    <div className="container">
-      <div className="card" style={{ maxWidth: '400px', margin: '50px auto' }}>
+    <div className="auth-container">
+      <div className="auth-form">
         <h2>Login</h2>
-        
-        {error && (
-          <div style={{ color: '#dc3545', marginBottom: '20px' }}>
-            {error}
-          </div>
-        )}
+        {error && <div className="error-message">{error}</div>}
         
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Email:</label>
+            <label htmlFor="email">Email</label>
             <input
               type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
           
           <div className="form-group">
-            <label>Password:</label>
+            <label htmlFor="password">Password</label>
             <input
               type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
           
-          <button 
-            type="submit" 
-            className="btn btn-primary"
-            disabled={loading}
-            style={{ width: '100%' }}
-          >
+          <button type="submit" disabled={loading} className="auth-btn">
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
         
-        <p style={{ marginTop: '20px', textAlign: 'center' }}>
+        <p className="auth-link">
           Don't have an account? <Link to="/register">Register here</Link>
         </p>
       </div>

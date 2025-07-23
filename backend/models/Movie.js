@@ -1,6 +1,8 @@
 
 const db = require('../config/database');
 
+const db = require('../config/database');
+
 class Movie {
   static async create(movieData) {
     const { id, title, overview, poster_path, backdrop_path, release_date, vote_average, vote_count, genre_ids } = movieData;
@@ -29,5 +31,7 @@ class Movie {
     return rows;
   }
 }
+
+module.exports = Movie;
 
 module.exports = Movie;

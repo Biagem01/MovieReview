@@ -63,3 +63,5 @@ class Review {
 }
 
 module.exports = Review;
+
+module.exports = Review;
