@@ -34,6 +34,34 @@ Progetto sviluppato a scopo formativo per mettere in pratica tecnologie frontend
 
 ---
 
+#Installazione
+
+1. Clona il progetto
+2. Configura il backend e il frontend
+   -  npm install
+3. Crea un file .env (uno per il backend nella root del progetto, e uno per il frontend all'interno della cartella frontend con PORT differente ovviamente)
+   - DB_HOST=localhost
+     DB_USER=root
+     DB_PORT=
+     DB_PASSWORD=yourpassword
+     DB_DATABASE=moviestar
+
+     PORT=""
+
+
+      TMDB_API_KEY=""
+    JWT_SECRET=your_jwt_secret
+
+4. importa migration.sql nel tuo MySQL per creare le tabelle.
+5. Sposta il progetto su htdocs all'interno di MAMP
+6. Fai partire MAMP
+7. Fai Partire il backend --> cd MovieReview --> node index.js
+8. Fai partire il frontend --> cd MovieReview --> cd frontend --> npm start
+
+# 👨‍💻 Autore
+Biagio — Full Stack Student Developer
+start2impact University
+biagio.99cubisino@gmail.com
 
 
 
