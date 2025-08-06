@@ -1,6 +1,6 @@
-# 🎬 MovieStar
+# 🎬 MovieReview
 
-MovieStar è una piattaforma **full-stack** dedicata agli appassionati di film e serie TV, che permette agli utenti di scoprire, recensire e gestire contenuti preferiti.
+MovieReview è una piattaforma **full-stack** dedicata agli appassionati di film e serie TV, che permette agli utenti di scoprire, recensire e gestire contenuti preferiti.
 
 Progetto sviluppato a scopo formativo per mettere in pratica tecnologie frontend e backend moderne, pattern REST, autenticazione JWT e integrazione con API esterne (TMDb).
 
@@ -44,7 +44,7 @@ Progetto sviluppato a scopo formativo per mettere in pratica tecnologie frontend
      DB_USER=root
      DB_PORT=
      DB_PASSWORD=yourpassword
-     DB_DATABASE=moviestar
+     DB_DATABASE=moviereview
 
      PORT=""
 
