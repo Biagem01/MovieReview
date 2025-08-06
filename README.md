@@ -59,7 +59,7 @@ Progetto sviluppato a scopo formativo per mettere in pratica tecnologie frontend
 8. Fai partire il frontend --> cd MovieReview --> cd frontend --> npm start
 
 # 👨‍💻 Autore
-Biagio — Full Stack Student Developer
+Biagio Cubisino — Full Stack Student Developer
 start2impact University
 biagio.99cubisino@gmail.com
 
