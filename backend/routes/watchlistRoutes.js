@@ -6,7 +6,7 @@ const authMiddleware = require('../middleware/auth');
 const router = express.Router();
 
 router.post('/', authMiddleware, WatchlistController.addToWatchlist);
-router.delete('/:movie_id', authMiddleware, WatchlistController.removeFromWatchlist);
+router.delete('/:type/:movie_id', authMiddleware, WatchlistController.removeFromWatchlist);
 router.get('/', authMiddleware, WatchlistController.getUserWatchlist);
 router.get('/check/:movie_id', authMiddleware, WatchlistController.checkIfInWatchlist);
 

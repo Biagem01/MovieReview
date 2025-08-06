@@ -136,32 +136,3 @@ code {
   font-size: 18px;
 }
 
-.pagination {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin: 30px 0;
-}
-
-.pagination button {
-  padding: 8px 16px;
-  border: 1px solid #444;
-  background-color: #2a2a2a;
-  color: #fff;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.pagination button:hover {
-  background-color: #444;
-}
-
-.pagination button.active {
-  background-color: #007bff;
-  border-color: #007bff;
-}
-
-.pagination button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}

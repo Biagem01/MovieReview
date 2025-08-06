@@ -1,0 +1,152 @@
+.cast-crew {
+  width: 320px;
+  max-width: 100%;
+  background-color: rgba(26, 26, 26, 0.95);
+  padding: 1rem 1rem;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  color: #f2f2f2;
+  font-family: "Merriweather", serif;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  max-height: 650px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.cast-crew h2 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: #ff6b6b;
+  font-weight: 700;
+  font-family: "Cinzel", serif;
+  border-bottom: 2px solid #ff6b6b;
+  padding-bottom: 0.5rem;
+}
+
+/* Griglia 2 colonne fluida */
+.cast-list,
+.crew-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem 1rem;
+  margin-bottom: 2rem;
+  box-sizing: border-box;
+}
+
+.person-card {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.25rem 0.4rem;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  cursor: default;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.person-card:hover {
+  background-color: rgba(255, 107, 107, 0.15);
+  box-shadow: 0 0 8px #ff6b6baa;
+  transform: translateY(-2px);
+}
+
+.person-image {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 5px #ff6b6b;
+  flex-shrink: 0;
+  flex-grow: 0;
+  user-select: none;
+}
+
+.person-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0; /* important per ellipsis */
+  overflow: hidden;
+}
+
+.person-name {
+  font-weight: 700;
+  font-family: "Cinzel", serif;
+  color: #ff6b6b;
+  font-size: 0.95rem;
+  margin-bottom: 0.1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.person-role {
+  font-family: "Source Code Pro", monospace;
+  font-size: 0.75rem;
+  color: #ddd;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Scrollbar styling per Chrome/Edge */
+.cast-crew::-webkit-scrollbar {
+  width: 8px;
+}
+
+.cast-crew::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cast-crew::-webkit-scrollbar-thumb {
+  background-color: #ff6b6bcc;
+  border-radius: 6px;
+  border: 2px solid transparent;
+}
+
+/* Responsive per mobile */
+@media (max-width: 768px) {
+  .cast-crew {
+    width: 100%;
+    max-height: none;
+    margin-top: 2rem;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: none;
+    backdrop-filter: none;
+    overflow-x: hidden;
+  }
+
+  .cast-list,
+  .crew-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .person-card {
+    justify-content: flex-start;
+    gap: 0.4rem;
+    white-space: normal;
+  }
+
+  .person-image {
+    width: 30px;
+    height: 30px;
+  }
+
+  .person-name {
+    font-size: 0.9rem;
+    white-space: normal;
+  }
+
+  .person-role {
+    font-size: 0.7rem;
+    white-space: normal;
+  }
+}

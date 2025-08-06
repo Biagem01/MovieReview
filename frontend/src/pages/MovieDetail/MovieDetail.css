@@ -1,0 +1,386 @@
+.movie-detail {
+  position: relative;
+  min-height: 100vh;
+  animation: fadeIn 0.6s ease-in-out;
+  color: #f2f2f2;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.movie-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.25;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.movie-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  border-radius: 10px;
+
+  display: flex;
+  gap: 2rem;
+  color: #f2f2f2;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.back-button {
+  font-family: "Space Grotesk", sans-serif;
+  background-color: transparent;
+  color: #ff6b6b;
+  padding: 0.7rem 1.5rem;
+  border: 2px solid #ff6b6b;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 2rem;
+}
+
+.back-button:hover {
+  background-color: #ff6b6b;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 107, 107, 0.3);
+}
+
+.movie-header {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  background-color: rgba(26, 26, 26, 0.95);
+  padding: 2rem;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  align-items: flex-start;
+  /* 3 colonne: poster, info, castcrew */
+}
+
+.movie-poster-large {
+  width: 300px;
+  height: 450px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+
+.movie-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.movie-info h1 {
+  font-family: "Cinzel", serif;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #ff6b6b;
+  line-height: 1.2;
+  font-size: 2.5rem;
+}
+
+.movie-overview {
+  font-family: "Source Code Pro", monospace;
+  font-weight: 400;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  color: #ddd;
+}
+
+.movie-stats {
+  font-family: "Space Mono", monospace;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat strong {
+  color: #ff6b6b;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  font-family: "Space Mono", monospace;
+  font-weight: bold;
+  padding: 0.75rem 1.4rem;
+  border: 2px solid #ff6b6b;
+  border-radius: 6px;
+  background-color: transparent;
+  color: #ff6b6b;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.action-btn:hover,
+.action-btn.active {
+  background-color: #ff6b6b;
+  color: white;
+  box-shadow: 0 0 15px #ff6b6bcc, 0 0 30px #ff6b6b99;
+  transform: scale(1.05);
+}
+
+/* Sezioni recensioni */
+.reviews-section {
+  font-family: "Merriweather", serif;
+  background-color: rgba(26, 26, 26, 0.95);
+  padding: 2rem;
+  border-radius: 10px;
+  margin-top: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.reviews-section h2,
+.reviews-section h3 {
+  color: #ff6b6b;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.reviews-section h3 {
+  padding-top: 2.5rem;
+}
+
+/* Recensioni TMDb */
+.tmdb-review {
+  background-color: #1f1f1f;
+  color: #eee;
+  padding: 24px 30px;
+  margin-bottom: 24px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(255, 107, 107, 0.25);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  transition: all 0.3s ease;
+  border: 1.5px solid transparent;
+}
+
+.tmdb-review:hover {
+  background-color: #2a2a2a;
+  box-shadow: 0 12px 30px rgba(255, 107, 107, 0.5);
+  border-color: #ff6b6b;
+  transform: translateY(-3px);
+}
+
+.tmdb-review p:first-child {
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #ff6b6b;
+  font-size: 1.2rem;
+}
+
+.tmdb-review p:nth-child(2) {
+  margin-bottom: 18px;
+  color: #ddd;
+  white-space: pre-wrap;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.tmdb-review a {
+  color: #ff6b6b;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.tmdb-review a:hover {
+  color: #ffa6a6;
+}
+
+.tmdb-review a::after {
+  content: '↗';
+  margin-left: 6px;
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.tmdb-review a:hover::after {
+  transform: translateX(4px);
+}
+
+.tmdb-review hr {
+  border: none;
+  border-top: 1px solid #444;
+  margin-top: 18px;
+  opacity: 0.5;
+}
+
+.no-reviews {
+  color: #aaa;
+  font-style: italic;
+  margin-top: 20px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.movie-stats span:hover {
+  animation: pulse 0.6s ease-in-out infinite alternate;
+  cursor: default;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+    color: #ff6b6b;
+    text-shadow: 0 0 4px #ff6b6b;
+  }
+  to {
+    transform: scale(1.2);
+    color: #ffa6a6;
+    text-shadow: 0 0 12px #ffa6a6;
+  }
+}
+
+/* Nuova classe per CastCrew */
+.cast-crew {
+  width: 280px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  max-height: 450px;
+  background-color: rgba(40, 40, 40, 0.8);
+  border-radius: 8px;
+  padding: 1rem;
+  color: #eee;
+  box-shadow: 0 0 10px #ff6b6b88;
+}
+
+/* Sezione Stagioni */
+.tv-details-section {
+  margin-top: 3rem;
+  background-color: rgba(26, 26, 26, 0.95);
+  padding: 1.5rem 2rem;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.25);
+  font-family: "Merriweather", serif;
+}
+
+.tv-details-section h2 {
+  color: #ff6b6b;
+  font-size: 2rem;
+  margin-bottom: 1.2rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+.season-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.season-buttons button {
+  background-color: transparent;
+  border: 2px solid #ff6b6b;
+  border-radius: 6px;
+  color: #ff6b6b;
+  padding: 0.7rem 1.3rem;
+  font-family: "Space Mono", monospace;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  min-width: 110px;
+  text-align: center;
+  box-shadow: 0 0 5px transparent;
+}
+
+.season-buttons button:hover:not(.active) {
+  background-color: #ff6b6b;
+  color: white;
+  box-shadow: 0 0 15px #ff6b6bcc, 0 0 30px #ff6b6b99;
+  transform: translateY(-2px);
+}
+
+.season-buttons button.active {
+  background-color: #ff6b6b;
+  color: white;
+  box-shadow: 0 0 25px #ff6b6bdd, 0 0 40px #ff6b6bbb;
+  transform: scale(1.1);
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .movie-content {
+    padding: 1rem;
+    flex-direction: column;
+  }
+
+  .movie-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .movie-poster-large {
+    width: 250px;
+    height: 375px;
+  }
+
+  .movie-info h1 {
+    font-size: 2rem;
+  }
+
+  .movie-stats {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .action-buttons {
+    justify-content: center;
+  }
+
+  .reviews-section h2,
+  .reviews-section h3 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .season-buttons {
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: center;
+  }
+
+  .season-buttons button {
+    min-width: 100%;
+    max-width: 320px;
+  }
+}

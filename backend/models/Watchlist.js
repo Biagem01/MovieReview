@@ -1,7 +1,6 @@
 
 const db = require('../config/database');
 
-const db = require('../config/database');
 
 class Watchlist {
   static async add(user_id, movie_id) {
@@ -51,4 +50,4 @@ class Watchlist {
 
 module.exports = Watchlist;
 
-module.exports = Watchlist;
+
