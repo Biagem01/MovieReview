@@ -20,9 +20,7 @@ router.get('/on-air', MovieController.getOnAirTVShows);
 router.get('/movies/top-rated', MovieController.getTopRated);
 router.get('/tv/top-rated', MovieController.getTopRatedTV);
 
-// Route specifiche TV
-router.get('/tv/:id/season/:seasonNumber/episode/:episodeNumber', MovieController.getEpisodeDetails);
-router.get('/tv/:id/season/:seasonNumber', MovieController.getSeasonDetails);
+
 
 
 
