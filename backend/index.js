@@ -22,15 +22,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// 🔹 DEBUG: commenta tutti tranne uno
+// Routes
 app.use('/api/auth', authRoutes);
-// app.use('/api/users', userRoutes);
-// app.use('/api/movies', movieRoutes);
-// app.use('/api/reviews', reviewRoutes);
-// app.use('/api/favorites', favoriteRoutes);
-// app.use('/api/watchlist', watchlistRoutes);
-// app.use('/api/review-likes', reviewLikeRoutes);
-// app.use('/api/notifications', notificationRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/movies', movieRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/favorites', favoriteRoutes);
+app.use('/api/watchlist', watchlistRoutes);
+app.use('/api/review-likes', reviewLikeRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
