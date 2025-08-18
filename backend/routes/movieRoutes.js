@@ -20,8 +20,14 @@ router.get('/on-air', MovieController.getOnAirTVShows);
 router.get('/movies/top-rated', MovieController.getTopRated);
 router.get('/tv/top-rated', MovieController.getTopRatedTV);
 
+// Route specifiche TV
+router.get('/tv/:id/season/:seasonNumber/episode/:episodeNumber', MovieController.getEpisodeDetails);
+router.get('/tv/:id/season/:seasonNumber', MovieController.getSeasonDetails);
 
-
-
+// Route con parametri dinamici (SEMPRE ALLA FINE)
+router.get('/:type/:id/credits', MovieController.getCredits);
+router.get('/:type/:id/videos', MovieController.getVideos);
+router.get('/:type/:id/similar', MovieController.getSimilar);
+router.get('/:type/:id', MovieController.getDetails);
 
 module.exports = router;
