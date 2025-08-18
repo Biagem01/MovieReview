@@ -5,14 +5,14 @@ const path = require('path');
 require('dotenv').config();
 
 // Import routes
-const authRoutes = require('./backend/routes/authRoutes');
-const userRoutes = require('./backend/routes/userRoutes');
-const movieRoutes = require('./backend/routes/movieRoutes');
-const reviewRoutes = require('./backend/routes/reviewRoutes');
-const favoriteRoutes = require('./backend/routes/favoriteRoutes');
-const watchlistRoutes = require('./backend/routes/watchlistRoutes');
-const reviewLikeRoutes = require('./backend/routes/reviewLikeRoutes');
-const notificationRoutes = require('./backend/routes/notificationRoutes');
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const movieRoutes = require('./routes/movieRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+const favoriteRoutes = require('./routes/favoriteRoutes');
+const watchlistRoutes = require('./routes/watchlistRoutes');
+const reviewLikeRoutes = require('./routes/reviewLikeRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 
 
