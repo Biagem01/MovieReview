@@ -1,4 +1,3 @@
-
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -13,8 +12,6 @@ const favoriteRoutes = require('./routes/favoriteRoutes');
 const watchlistRoutes = require('./routes/watchlistRoutes');
 const reviewLikeRoutes = require('./routes/reviewLikeRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
-
-
 
 const app = express();
 const PORT = process.env.PORT || 5050;
@@ -35,8 +32,6 @@ app.use('/api/watchlist', watchlistRoutes);
 app.use('/api/review-likes', reviewLikeRoutes);
 app.use('/api/notifications', notificationRoutes);
 
-
-
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' });
@@ -50,6 +45,21 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, 'frontend/build', 'index.html'));
   });
 }
+
+// 🔹 Log di tutte le route attive
+console.log('=== Lista di tutte le route attive ===');
+app._router.stack.forEach((middleware) => {
+  if (middleware.route) { // route diretta
+    console.log(middleware.route.path);
+  } else if (middleware.name === 'router') { // router annidato
+    middleware.handle.stack.forEach((handler) => {
+      if (handler.route) {
+        console.log(handler.route.path);
+      }
+    });
+  }
+});
+console.log('=== Fine lista ===');
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
