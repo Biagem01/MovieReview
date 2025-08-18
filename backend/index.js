@@ -46,20 +46,24 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-// 🔹 Log di tutte le route attive
-console.log('=== Lista di tutte le route attive ===');
-app._router.stack.forEach((middleware) => {
-  if (middleware.route) { // route diretta
-    console.log(middleware.route.path);
-  } else if (middleware.name === 'router') { // router annidato
-    middleware.handle.stack.forEach((handler) => {
-      if (handler.route) {
-        console.log(handler.route.path);
-      }
-    });
-  }
-});
-console.log('=== Fine lista ===');
+// 🔹 Log sicuro di tutte le route attive
+const listRoutes = () => {
+  if (!app._router) return; // protezione se _router non esiste
+  console.log('=== Lista di tutte le route attive ===');
+  app._router.stack.forEach((middleware) => {
+    if (middleware.route) {
+      console.log(middleware.route.path);
+    } else if (middleware.name === 'router' && middleware.handle.stack) {
+      middleware.handle.stack.forEach((handler) => {
+        if (handler.route) {
+          console.log(handler.route.path);
+        }
+      });
+    }
+  });
+  console.log('=== Fine lista ===');
+};
+listRoutes();
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
