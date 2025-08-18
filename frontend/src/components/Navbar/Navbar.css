@@ -1,0 +1,226 @@
+/* Navbar.css */
+
+.navbar {
+  backdrop-filter: blur(12px);
+  background-color: rgba(26, 26, 26, 0.85);
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 500;
+  padding: 0.8rem 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.navbar.scrolled {
+  background-color: rgba(26, 26, 26, 0.98);
+  box-shadow:
+    0 6px 40px rgba(0, 0, 0, 0.4),
+    inset 0 -3px 5px rgba(255, 107, 107, 0.15);
+  padding: 1rem 0;
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 107, 107, 0.3);
+  transform: scale(1.02);
+  transition:
+    background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    padding 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar.scrolled .nav-link:hover {
+  text-shadow: 0 0 8px #ff4040;
+}
+
+.navbar.scrolled .nav-logo {
+  text-shadow: 0 0 8px #ff6b6b;
+  transition: text-shadow 0.4s ease;
+}
+
+
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ff6b6b;
+  text-decoration: none;
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
+}
+
+.nav-logo:hover {
+  color: #ff4040;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.nav-link {
+  color: #f1f1f1;
+  text-decoration: none;
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-size: 1.05rem;
+  position: relative;
+}
+
+/* Solo i .nav-link che NON sono anche .logout-btn avranno la linea sotto */
+.nav-link:not(.logout-btn)::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0%;
+  background-color: #ff6b6b;
+  transition: width 0.3s ease-in-out;
+}
+
+.nav-link:not(.logout-btn):hover::after {
+  width: 100%;
+}
+
+
+.nav-link:hover {
+    color: #ff6b6b;
+  box-shadow: 0 0 5px #ff6b6b44;
+}
+
+.logout-btn {
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #ff4040;
+  color: white;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 4px;
+  right: -6px;
+  background-color: #ff6b6b; /* stesso colore rosso del brand */
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 12px;
+  box-shadow: 0 0 5px #ff6b6baa;
+  user-select: none;
+  pointer-events: none;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  min-width: 18px;
+  text-align: center;
+  line-height: 1;
+}
+
+.nav-link.profile-link {
+  position: relative; /* serve a posizionare il badge in relazione al link */
+}
+
+/* Al passaggio del mouse, rendi il badge leggermente più acceso */
+.nav-link.profile-link:hover .notification-badge {
+  background-color: #ff4040;
+  box-shadow: 0 0 8px #ff4040cc;
+}
+
+
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 0 1rem;
+  }
+
+  .nav-menu {
+    gap: 1rem;
+  }
+
+  .nav-link {
+    font-size: 0.95rem;
+  }
+
+  
+  .nav-container { padding: 0 1rem; }
+}
+
+
+/* ----------- MOBILE MENU ------------ */
+
+.hamburger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  z-index: 1001;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background-color: #fff;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.hamburger.open span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.open span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+.mobile-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  background: rgba(10,10,10,0.95);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0;
+  gap: 1rem;
+  animation: fadeMenu 0.4s ease forwards;
+}
+
+@keyframes fadeMenu {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* mostra hamburger & nasconde menu desktop */
+@media (max-width: 768px) {
+  .desktop-only { display: none; }
+  .hamburger { display: flex; }
+  .nav-container { padding: 0 1rem; }
+}
+
+

@@ -1,0 +1,379 @@
+.profile-page {
+  font-family: 'Poppins', sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.profile-container h1 {
+  font-family: "Space Grotesk", sans-serif;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #ff6b6b;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+/* Nuovo contenitore per profilo + notifiche affiancate */
+.top-section {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  margin-bottom: 3rem; /* spazio sotto */
+}
+
+.profile-info {
+  background-color: #1f1f1f;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+
+  flex: 2; /* occuperà più spazio */
+}
+
+.profile-image-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.profile-image, .default-avatar {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ff6b6b;
+  transition: transform 0.3s ease;
+}
+
+.profile-image:hover, .default-avatar:hover {
+  transform: scale(1.05);
+}
+
+.default-avatar {
+  background-color: #ff6b6b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: bold;
+  color: white;
+}
+
+.image-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#profile-image-input {
+  display: none;
+}
+
+.upload-label {
+  padding: 0.6rem 1.2rem;
+  background-color: #333;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.upload-label:hover {
+  background-color: #444;
+}
+
+.upload-btn {
+  padding: 0.6rem 1.2rem;
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.upload-btn:hover:not(:disabled) {
+  background-color: #ff4040;
+}
+
+.upload-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.uploading-text {
+  color: #888;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.user-details {
+  flex: 2;
+  width: 100%;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+  border-bottom: 1px solid #333;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-item label {
+  font-weight: bold;
+  color: #ff6b6b;
+  font-size: 1rem;
+}
+
+.detail-item span {
+  color: #ccc;
+  font-size: 1rem;
+}
+
+/* Sezione notifiche affiancata */
+.notifications-section {
+  font-family: 'Poppins', sans-serif;
+  background-color: #1a1a1a;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+
+  flex: 1; /* occupa meno spazio */
+  max-height: 450px; /* altezza massima */
+  overflow-y: auto; /* scroll verticale se serve */
+  margin-top: 0; /* togli margine top per allineare in linea */
+}
+
+.notifications-section h2 {
+  color: #ff6b6b;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.notification-item {
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.notification-item:hover {
+  background-color: #3b1b1b;
+  transform: translateY(-3px);
+}
+
+.notification-item p {
+  margin: 0;
+  color: #ddd;
+  line-height: 1.4;
+  font-size: 1rem;
+}
+
+.notification-item small {
+  display: block;
+  margin-top: 0.3rem;
+  color: #999;
+  font-size: 0.8rem;
+}
+
+/* Stato notifica */
+.notification-item.unread {
+  border-left: 4px solid #ff6b6b;
+  background-color: #3a1f1f;
+  font-weight: 600;
+  color: #fff;
+}
+
+.notification-item.read {
+  opacity: 0.6;
+  cursor: default;
+  font-weight: 400;
+  border-left: 4px solid transparent;
+}
+
+/* Scrollbar personalizzata per .notifications-section */
+/* Chrome, Safari, Edge */
+.notifications-section::-webkit-scrollbar {
+  width: 8px;
+}
+
+.notifications-section::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 16px;
+}
+
+.notifications-section::-webkit-scrollbar-thumb {
+  background-color: #ff6b6b;
+  border-radius: 16px;
+  border: 2px solid #1a1a1a;
+}
+
+.notifications-section::-webkit-scrollbar-thumb:hover {
+  background-color: #ff4040;
+}
+
+/* Firefox */
+.notifications-section {
+  scrollbar-width: thin;
+  scrollbar-color: #ff6b6b #1a1a1a;
+}
+
+.mark-read-btn {
+  margin-top: 0.5rem;
+  background-color: transparent;
+  border: 1.5px solid #ff6b6b;
+  color: #ff6b6b;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  user-select: none;
+}
+
+.mark-read-btn:hover {
+  background-color: #ff6b6b;
+  color: white;
+}
+
+.notification-actions {
+  margin-top: 0.6rem;
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.details-btn {
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.9rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+.details-btn:hover {
+  background-color: #881515;
+}
+
+
+
+/* Reviews */
+.reviews-section {
+  font-family: 'Poppins', sans-serif;
+  margin-top: 3rem;
+  background-color: #1a1a1a;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.reviews-section h2 {
+  color: #ff6b6b;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.review-card {
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-4px);
+}
+
+.review-card p {
+  margin: 0.3rem 0;
+  color: #ddd;
+  line-height: 1.4;
+}
+
+.review-card p strong {
+  color: #ff6b6b;
+}
+
+.review-card-link {
+  text-decoration: none;
+  color: inherit;
+  outline: none;
+}
+
+.review-card-link:focus,
+.review-card-link:active {
+  outline: none;
+  box-shadow: none;
+}
+
+.details-hint {
+  margin-top: 0.8rem;
+  color: #ff6b6b;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.review-card:hover .details-hint {
+  color: #9d1717;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .top-section {
+    flex-direction: column;
+  }
+
+  .profile-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  .notifications-section {
+    width: 100%;
+    max-height: none;
+    overflow-y: visible;
+    margin-top: 2rem;
+  }
+
+  .detail-item {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: left;
+    align-items: flex-start;
+  }
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

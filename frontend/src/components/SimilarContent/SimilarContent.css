@@ -1,0 +1,32 @@
+/* src/components/SimilarContent.css */
+
+.similar-section {
+  font-family: "Space Grotesk", sans-serif;
+  background-color: rgba(26, 26, 26, 0.95);
+  padding: 2rem;
+  border-radius: 10px;
+  margin-top: 2rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(255, 107, 107, 0.2);
+}
+
+.similar-section h2 {
+  color: #ff6b6b;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  font-family: "Cinzel", serif;
+}
+
+.similar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1.5rem;
+}
+
+.loading-text {
+  font-family: "Space Mono", monospace;
+  color: #ccc;
+  font-style: italic;
+  margin: 2rem;
+  text-align: center;
+}
