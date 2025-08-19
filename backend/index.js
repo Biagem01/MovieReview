@@ -37,16 +37,6 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' });
 });
 
-// Serve React frontend in production
-if (process.env.NODE_ENV === 'production') {
-  const frontendBuildPath = path.join(__dirname, 'frontend/build');
-  app.use(express.static(frontendBuildPath));
-  
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(frontendBuildPath, 'index.html'));
-  });
-}
-
 // 🔹 Debug: log dettagliato di tutte le route
 const listRoutes = () => {
   if (!app._router) return;
@@ -67,6 +57,7 @@ const listRoutes = () => {
 };
 listRoutes();
 
+// Avvio server
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Backend Render running on port ${PORT}`);
 });
