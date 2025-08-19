@@ -36,6 +36,21 @@ const BrowseSection = () => {
     fetchItems();
   }, [section, type, selectedGenre, currentPage]);
 
+  const fetchGenres = async () => {
+    if (type !== 'movie') {
+      setGenres([]);
+      setSelectedGenre('');
+      return;
+    }
+    try {
+      const response = await axios.get(`${BASE_URL}/api/movies/genres`);
+      setGenres(response.data.genres || []);
+    } catch (error) {
+      console.error('Error fetching genres:', error);
+      setGenres([]);
+    }
+  };
+
   const fetchItems = async () => {
     setLoading(true);
     try {
