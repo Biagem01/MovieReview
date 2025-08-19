@@ -16,8 +16,15 @@ const notificationRoutes = require('./routes/notificationRoutes');
 const app = express();
 const PORT = process.env.PORT || 5050;
 
+// 🔹 Configura CORS per permettere solo il tuo dominio Vercel
+app.use(cors({
+  origin: [
+    "https://movie-review-5tkc2ul5v-biagio99cubisino-5908s-projects.vercel.app"
+  ],
+  credentials: true
+}));
+
 // Middleware
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

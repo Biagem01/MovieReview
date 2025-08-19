@@ -1,6 +1,14 @@
--- Database creation
-CREATE DATABASE IF NOT EXISTS movie_review_db;
-USE movie_review_db;
+-- Disabilita temporaneamente i controlli delle foreign key
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- Rimuove eventuali tabelle esistenti nell'ordine corretto
+DROP TABLE IF EXISTS review_likes;
+DROP TABLE IF EXISTS watchlist;
+DROP TABLE IF EXISTS favorites;
+DROP TABLE IF EXISTS notifications;
+DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS movies;
+DROP TABLE IF EXISTS users;
 
 -- Users table
 CREATE TABLE users (
@@ -37,7 +45,8 @@ CREATE TABLE reviews (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY unique_user_movie (user_id, movie_id),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
 );
 
 -- Favorites table
@@ -47,7 +56,8 @@ CREATE TABLE favorites (
     movie_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE KEY unique_user_movie_favorite (user_id, movie_id),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
 );
 
 -- Watchlist table
@@ -57,7 +67,8 @@ CREATE TABLE watchlist (
     movie_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE KEY unique_user_movie_watchlist (user_id, movie_id),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
 );
 
 -- Review likes table
@@ -93,3 +104,6 @@ CREATE INDEX idx_reviews_user_id ON reviews(user_id);
 CREATE INDEX idx_favorites_user_id ON favorites(user_id);
 CREATE INDEX idx_watchlist_user_id ON watchlist(user_id);
 CREATE INDEX idx_movies_title ON movies(title);
+
+-- Riabilita i controlli delle foreign key
+SET FOREIGN_KEY_CHECKS = 1;

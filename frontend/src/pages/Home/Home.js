@@ -6,6 +6,7 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 import './Home.css';
 
 const MAX_TOTAL_PAGES = 500;
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Home = () => {
   const location = useLocation();
@@ -72,7 +73,7 @@ const Home = () => {
       const fetchHomeData = async () => {
         setLoading(true);
         try {
-          const response = await axios.get('/api/movies/home');
+          const response = await axios.get(`${BASE_URL}/api/movies/home`);
           setHomeData(response.data);
         } catch (error) {
           console.error('Error fetching home data:', error);
@@ -99,7 +100,7 @@ const Home = () => {
   // Fetch functions
   const fetchGenres = async () => {
     try {
-      const response = await axios.get('/api/movies/genres');
+      const response = await axios.get(`${BASE_URL}/api/movies/genres`);
       setGenres(response.data.genres || []);
     } catch (error) {
       console.error('Error fetching genres:', error);
@@ -115,7 +116,7 @@ const Home = () => {
       if (searchQuery.trim()) {
         if (!contentType) {
           // Multi search
-          response = await axios.get('/api/movies/search-multi', {
+          response = await axios.get(`${BASE_URL}/api/movies/search-multi`, {
             params: { query: searchQuery, page: currentPage },
           });
 
@@ -127,7 +128,9 @@ const Home = () => {
           setTotalPages(Math.min(response.data.total_pages || 1, MAX_TOTAL_PAGES));
         } else {
           // Specific search
-          const endpoint = contentType === 'movie' ? '/api/movies/search' : '/api/movies/search-tv';
+          const endpoint = contentType === 'movie'
+            ? `${BASE_URL}/api/movies/search`
+            : `${BASE_URL}/api/movies/search-tv`;
           response = await axios.get(endpoint, {
             params: { query: searchQuery, page: currentPage },
           });
@@ -138,7 +141,9 @@ const Home = () => {
         }
       } else {
         // Popular items
-        const endpoint = contentType === 'movie' ? '/api/movies/popular' : '/api/movies/popular-tv';
+        const endpoint = contentType === 'movie'
+          ? `${BASE_URL}/api/movies/popular`
+          : `${BASE_URL}/api/movies/popular-tv`;
         const params = {
           page: currentPage,
           ...(contentType === 'movie' && selectedGenre ? { genre: selectedGenre } : {}),
