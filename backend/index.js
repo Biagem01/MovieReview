@@ -16,11 +16,20 @@ const notificationRoutes = require('./routes/notificationRoutes');
 const app = express();
 const PORT = process.env.PORT || 5050;
 
-// 🔹 Configura CORS per permettere solo il tuo dominio Vercel
+// 🔹 CORS: permetti sia Vercel che localhost
+const allowedOrigins = [
+  "https://movie-review-alpha-red.vercel.app", // dominio Vercel del frontend
+  "http://localhost:3000" // per sviluppo locale
+];
+
 app.use(cors({
-  origin: [
-    "https://movie-review-5tkc2ul5v-biagio99cubisino-5908s-projects.vercel.app"
-  ],
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true
 }));
 
@@ -44,7 +53,7 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' });
 });
 
-// 🔹 Debug: log dettagliato di tutte le route
+// 🔹 Debug: lista delle route attive
 const listRoutes = () => {
   if (!app._router) return;
   console.log('=== Lista di tutte le route attive ===');
@@ -66,5 +75,5 @@ listRoutes();
 
 // Avvio server
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Backend Render running on port ${PORT}`);
+  console.log(`✅ Backend Render running on port ${PORT}`);
 });
