@@ -5,13 +5,13 @@ const TMDB_API_KEY = '8657cf1a9db8333bc15a68ee00eba376';
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 
 class MovieController {
+  // ✅ Popular Movies (con caching su DB)
   static async getPopularMovies(req, res) {
     try {
       const page = req.query.page || 1;
       const genre = req.query.genre;
 
       let url = `${TMDB_BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}&page=${page}`;
-
       if (genre) {
         url = `${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&page=${page}&with_genres=${genre}`;
       }
@@ -19,7 +19,7 @@ class MovieController {
       const response = await axios.get(url);
       const movies = response.data.results;
 
-      // Cache movies in database
+      // Salva in DB se non esistono
       for (const movie of movies) {
         const exists = await Movie.findById(movie.id);
         if (!exists) {
@@ -48,27 +48,22 @@ class MovieController {
     }
   }
 
-  // Funzione generica per dettagli sia film che tv
+  // ✅ Dettagli film/serie
   static async getDetails(req, res) {
     try {
       const { type, id } = req.params;
-
       if (type !== 'movie' && type !== 'tv') {
         return res.status(400).json({ message: 'Invalid type parameter' });
       }
 
-      // Qui potresti gestire il caching differenziato per film e tv, ora esempio semplice:
       let data;
-
       if (type === 'movie') {
-        // Provo dal DB, se usi un modello differente per tv cambia qui
         let movie = await Movie.findById(id);
         if (movie) {
           data = movie;
         } else {
           const response = await axios.get(`${TMDB_BASE_URL}/movie/${id}?api_key=${TMDB_API_KEY}`);
           data = response.data;
-          // Salva nel DB se vuoi
           await Movie.create({
             id: data.id,
             title: data.title,
@@ -81,8 +76,7 @@ class MovieController {
             genre_ids: data.genres.map(g => g.id)
           });
         }
-      } else if (type === 'tv') {
-        // Per ora non gestisci caching per tv, solo fetch da TMDB
+      } else {
         const response = await axios.get(`${TMDB_BASE_URL}/tv/${id}?api_key=${TMDB_API_KEY}`);
         data = response.data;
       }
@@ -94,13 +88,11 @@ class MovieController {
     }
   }
 
+  // ✅ Ricerca film
   static async searchMovies(req, res) {
     try {
       const { query, page = 1 } = req.query;
-
-      if (!query) {
-        return res.status(400).json({ message: 'Search query is required' });
-      }
+      if (!query) return res.status(400).json({ message: 'Search query is required' });
 
       const response = await axios.get(`${TMDB_BASE_URL}/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&page=${page}`);
 
@@ -115,13 +107,11 @@ class MovieController {
     }
   }
 
+  // ✅ Ricerca serie TV
   static async searchTVShows(req, res) {
     try {
       const { query, page = 1 } = req.query;
-
-      if (!query) {
-        return res.status(400).json({ message: 'Search query is required' });
-      }
+      if (!query) return res.status(400).json({ message: 'Search query is required' });
 
       const response = await axios.get(`${TMDB_BASE_URL}/search/tv?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&page=${page}`);
 
@@ -136,6 +126,7 @@ class MovieController {
     }
   }
 
+  // ✅ Generi
   static async getGenres(req, res) {
     try {
       const response = await axios.get(`${TMDB_BASE_URL}/genre/movie/list?api_key=${TMDB_API_KEY}`);
@@ -146,17 +137,15 @@ class MovieController {
     }
   }
 
+  // ✅ TV Popolari
   static async getPopularTVShows(req, res) {
     try {
       const page = req.query.page || 1;
-
       const url = `${TMDB_BASE_URL}/tv/popular?api_key=${TMDB_API_KEY}&page=${page}`;
-
       const response = await axios.get(url);
-      const tvShows = response.data.results;
 
       res.json({
-        tvShows,
+        tvShows: response.data.results,
         total_pages: response.data.total_pages,
         current_page: page
       });
@@ -166,18 +155,15 @@ class MovieController {
     }
   }
 
-  // 🔽 Aggiungi alla fine della tua classe MovieController
-
+  // ✅ Now Playing
   static async getNowPlaying(req, res) {
     try {
       const page = req.query.page || 1;
       const url = `${TMDB_BASE_URL}/movie/now_playing?api_key=${TMDB_API_KEY}&page=${page}&language=it-IT`;
-
       const response = await axios.get(url);
-      const movies = response.data.results;
 
       res.json({
-        movies,
+        movies: response.data.results,
         total_pages: response.data.total_pages,
         current_page: page
       });
@@ -187,16 +173,15 @@ class MovieController {
     }
   }
 
+  // ✅ Top Rated
   static async getTopRated(req, res) {
     try {
       const page = req.query.page || 1;
       const url = `${TMDB_BASE_URL}/movie/top_rated?api_key=${TMDB_API_KEY}&page=${page}&language=it-IT`;
-
       const response = await axios.get(url);
-      const movies = response.data.results;
 
       res.json({
-        movies,
+        movies: response.data.results,
         total_pages: response.data.total_pages,
         current_page: page
       });
@@ -206,16 +191,15 @@ class MovieController {
     }
   }
 
+  // ✅ Upcoming
   static async getUpcoming(req, res) {
     try {
       const page = req.query.page || 1;
       const url = `${TMDB_BASE_URL}/movie/upcoming?api_key=${TMDB_API_KEY}&page=${page}&language=it-IT`;
-
       const response = await axios.get(url);
-      const movies = response.data.results;
 
       res.json({
-        movies,
+        movies: response.data.results,
         total_pages: response.data.total_pages,
         current_page: page
       });
@@ -225,237 +209,228 @@ class MovieController {
     }
   }
 
-static async getHomeData(req, res) {
-  try {
-    const [
-      trendingRes,
-      popularRes,
-      nowPlayingRes,
-      topRatedRes,
-      topRatedTVRes,
-      tvRes,
-      upcomingRes, // 👈 aggiunto
-    ] = await Promise.all([
-      axios.get(`${TMDB_BASE_URL}/trending/movie/day?api_key=${TMDB_API_KEY}`),
-      axios.get(`${TMDB_BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}`),
-      axios.get(`${TMDB_BASE_URL}/movie/now_playing?api_key=${TMDB_API_KEY}`),
-      axios.get(`${TMDB_BASE_URL}/movie/top_rated?api_key=${TMDB_API_KEY}`),
-      axios.get(`${TMDB_BASE_URL}/tv/top_rated?api_key=${TMDB_API_KEY}`),
-      axios.get(`${TMDB_BASE_URL}/tv/popular?api_key=${TMDB_API_KEY}`),
-      axios.get(`${TMDB_BASE_URL}/movie/upcoming?api_key=${TMDB_API_KEY}`), // 👈 aggiunto
-    ]);
+  // ✅ Home Data
+  static async getHomeData(req, res) {
+    try {
+      const [
+        trendingRes,
+        popularRes,
+        nowPlayingRes,
+        topRatedRes,
+        topRatedTVRes,
+        tvRes,
+        upcomingRes,
+      ] = await Promise.all([
+        axios.get(`${TMDB_BASE_URL}/trending/movie/day?api_key=${TMDB_API_KEY}`),
+        axios.get(`${TMDB_BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}`),
+        axios.get(`${TMDB_BASE_URL}/movie/now_playing?api_key=${TMDB_API_KEY}`),
+        axios.get(`${TMDB_BASE_URL}/movie/top_rated?api_key=${TMDB_API_KEY}`),
+        axios.get(`${TMDB_BASE_URL}/tv/top_rated?api_key=${TMDB_API_KEY}`),
+        axios.get(`${TMDB_BASE_URL}/tv/popular?api_key=${TMDB_API_KEY}`),
+        axios.get(`${TMDB_BASE_URL}/movie/upcoming?api_key=${TMDB_API_KEY}`),
+      ]);
 
-    res.json({
-      trending: trendingRes.data.results.slice(0, 10),
-      popularMovies: popularRes.data.results.slice(0, 10),
-      nowPlaying: nowPlayingRes.data.results.slice(0, 10),
-      topRatedMovies: topRatedRes.data.results.slice(0, 10),
-      topRatedTV: topRatedTVRes.data.results.slice(0, 10),
-      popularTV: tvRes.data.results.slice(0, 10),
-      upcoming: upcomingRes.data.results.slice(0, 10), // 👈 aggiunto
-    });
-  } catch (error) {
-    console.error('Error fetching home data:', error);
-    res.status(500).json({ message: 'Error loading home data' });
-  }
-}
-
-
-static async searchMulti(req, res) {
-  try {
-    const { query, page = 1 } = req.query;
-
-    if (!query) {
-      return res.status(400).json({ message: 'Search query is required' });
+      res.json({
+        trending: trendingRes.data.results.slice(0, 10),
+        popularMovies: popularRes.data.results.slice(0, 10),
+        nowPlaying: nowPlayingRes.data.results.slice(0, 10),
+        topRatedMovies: topRatedRes.data.results.slice(0, 10),
+        topRatedTV: topRatedTVRes.data.results.slice(0, 10),
+        popularTV: tvRes.data.results.slice(0, 10),
+        upcoming: upcomingRes.data.results.slice(0, 10),
+      });
+    } catch (error) {
+      console.error('Error fetching home data:', error);
+      res.status(500).json({ message: 'Error loading home data' });
     }
-
-    const response = await axios.get(`${TMDB_BASE_URL}/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&page=${page}`);
-
-    // Non serve filtrare qui se lo fai nel frontend, ma puoi anche farlo qui
-    const results = response.data.results.filter(
-      item => item.media_type === 'movie' || item.media_type === 'tv'
-    );
-
-    res.json({
-      results,
-      total_pages: response.data.total_pages,
-      current_page: page
-    });
-  } catch (error) {
-    console.error('Search multi error:', error);
-    res.status(500).json({ message: 'Error searching movies and TV shows' });
   }
-}
 
-static async getCredits(req, res) {
-  try {
-    const { type, id } = req.params;
+  // ✅ Search Multi
+  static async searchMulti(req, res) {
+    try {
+      const { query, page = 1 } = req.query;
+      if (!query) return res.status(400).json({ message: 'Search query is required' });
 
-    if (type !== 'movie' && type !== 'tv') {
-      return res.status(400).json({ message: 'Invalid type parameter' });
+      const response = await axios.get(`${TMDB_BASE_URL}/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&page=${page}`);
+      const results = response.data.results.filter(
+        item => item.media_type === 'movie' || item.media_type === 'tv'
+      );
+
+      res.json({
+        results,
+        total_pages: response.data.total_pages,
+        current_page: page
+      });
+    } catch (error) {
+      console.error('Search multi error:', error);
+      res.status(500).json({ message: 'Error searching movies and TV shows' });
     }
-
-    const url = `${TMDB_BASE_URL}/${type}/${id}/credits?api_key=${TMDB_API_KEY}&language=it-IT`;
-    const response = await axios.get(url);
-
-    res.json({
-      cast: response.data.cast,
-      crew: response.data.crew,
-    });
-  } catch (error) {
-    console.error('Errore nel recupero dei credits:', error.message);
-    res.status(500).json({ message: 'Errore nel recupero di cast e crew' });
   }
-}
 
-static async getVideos(req, res) {
-  try {
-    const { type, id } = req.params;
+  // ✅ Credits
+  static async getCredits(req, res) {
+    try {
+      const { type, id } = req.params;
+      if (type !== 'movie' && type !== 'tv') {
+        return res.status(400).json({ message: 'Invalid type parameter' });
+      }
 
-    if (type !== 'movie' && type !== 'tv') {
-      return res.status(400).json({ message: 'Invalid type parameter' });
+      const url = `${TMDB_BASE_URL}/${type}/${id}/credits?api_key=${TMDB_API_KEY}&language=it-IT`;
+      const response = await axios.get(url);
+
+      res.json({
+        cast: response.data.cast,
+        crew: response.data.crew,
+      });
+    } catch (error) {
+      console.error('Errore nel recupero dei credits:', error.message);
+      res.status(500).json({ message: 'Errore nel recupero di cast e crew' });
     }
-
-    const url = `${TMDB_BASE_URL}/${type}/${id}/videos?api_key=${TMDB_API_KEY}&language=it-IT`;
-    const response = await axios.get(url);
-
-    const videos = response.data.results;
-
-    // Se vuoi puoi filtrare solo i trailer o official video
-    const officialVideos = videos.filter(video =>
-      ['Trailer', 'Teaser', 'Clip'].includes(video.type) && video.site === 'YouTube'
-    );
-
-    res.json({ videos: officialVideos });
-  } catch (error) {
-    console.error('Errore nel recupero dei video:', error.message);
-    res.status(500).json({ message: 'Errore nel recupero dei video' });
   }
-}
 
-static async getSimilar(req, res) {
-  try {
-    const { type, id } = req.params;
-    const page = req.query.page || 1;
+  // ✅ Videos
+  static async getVideos(req, res) {
+    try {
+      const { type, id } = req.params;
+      if (type !== 'movie' && type !== 'tv') {
+        return res.status(400).json({ message: 'Invalid type parameter' });
+      }
 
-    if (type !== 'movie' && type !== 'tv') {
-      return res.status(400).json({ message: 'Invalid type parameter' });
+      const url = `${TMDB_BASE_URL}/${type}/${id}/videos?api_key=${TMDB_API_KEY}&language=it-IT`;
+      const response = await axios.get(url);
+      const videos = response.data.results.filter(
+        video => ['Trailer', 'Teaser', 'Clip'].includes(video.type) && video.site === 'YouTube'
+      );
+
+      res.json({ videos });
+    } catch (error) {
+      console.error('Errore nel recupero dei video:', error.message);
+      res.status(500).json({ message: 'Errore nel recupero dei video' });
     }
-
-    const url = `${TMDB_BASE_URL}/${type}/${id}/similar?api_key=${TMDB_API_KEY}&language=it-IT&page=${page}`;
-    const response = await axios.get(url);
-
-    res.json({
-      results: response.data.results,
-      total_pages: response.data.total_pages,
-      current_page: page
-    });
-  } catch (error) {
-    console.error('Errore nel recupero dei contenuti simili:', error.message);
-    res.status(500).json({ message: 'Errore nel recupero dei contenuti simili' });
   }
-}
 
-static async getTopRatedTV(req, res) {
-  try {
-    const page = req.query.page || 1;
-    const url = `${TMDB_BASE_URL}/tv/top_rated?api_key=${TMDB_API_KEY}&page=${page}&language=it-IT`;
+  // ✅ Similar
+  static async getSimilar(req, res) {
+    try {
+      const { type, id } = req.params;
+      const page = req.query.page || 1;
+      if (type !== 'movie' && type !== 'tv') {
+        return res.status(400).json({ message: 'Invalid type parameter' });
+      }
 
-    const response = await axios.get(url);
-    const tvShows = response.data.results;
+      const url = `${TMDB_BASE_URL}/${type}/${id}/similar?api_key=${TMDB_API_KEY}&language=it-IT&page=${page}`;
+      const response = await axios.get(url);
 
-    res.json({
-      tvShows,
-      total_pages: response.data.total_pages,
-      current_page: page
-    });
-  } catch (error) {
-    console.error('Get top rated TV error:', error);
-    res.status(500).json({ message: 'Error fetching top rated TV shows' });
+      res.json({
+        results: response.data.results,
+        total_pages: response.data.total_pages,
+        current_page: page
+      });
+    } catch (error) {
+      console.error('Errore nel recupero dei contenuti simili:', error.message);
+      res.status(500).json({ message: 'Errore nel recupero dei contenuti simili' });
+    }
   }
-}
 
-static async getTrendingMovies(req, res) {
-  try {
-    const page = req.query.page || 1;
-    const url = `${TMDB_BASE_URL}/trending/movie/day?api_key=${TMDB_API_KEY}&page=${page}`;
-    const response = await axios.get(url);
-    res.json({
-      movies: response.data.results,
-      total_pages: response.data.total_pages,
-      current_page: page
-    });
-  } catch (error) {
-    console.error('Get trending movies error:', error);
-    res.status(500).json({ message: 'Error fetching trending movies' });
+  // ✅ Top Rated TV
+  static async getTopRatedTV(req, res) {
+    try {
+      const page = req.query.page || 1;
+      const url = `${TMDB_BASE_URL}/tv/top_rated?api_key=${TMDB_API_KEY}&page=${page}&language=it-IT`;
+      const response = await axios.get(url);
+
+      res.json({
+        tvShows: response.data.results,
+        total_pages: response.data.total_pages,
+        current_page: page
+      });
+    } catch (error) {
+      console.error('Get top rated TV error:', error);
+      res.status(500).json({ message: 'Error fetching top rated TV shows' });
+    }
   }
-}
 
-static async getTrendingTVShows(req, res) {
-  try {
-    const page = req.query.page || 1;
-    const url = `${TMDB_BASE_URL}/trending/tv/day?api_key=${TMDB_API_KEY}&page=${page}`;
-    const response = await axios.get(url);
-    res.json({
-      tvShows: response.data.results,
-      total_pages: response.data.total_pages,
-      current_page: page
-    });
-  } catch (error) {
-    console.error('Get trending TV shows error:', error);
-    res.status(500).json({ message: 'Error fetching trending TV shows' });
+  // ✅ Trending Movies
+  static async getTrendingMovies(req, res) {
+    try {
+      const page = req.query.page || 1;
+      const url = `${TMDB_BASE_URL}/trending/movie/day?api_key=${TMDB_API_KEY}&page=${page}`;
+      const response = await axios.get(url);
+
+      res.json({
+        movies: response.data.results,
+        total_pages: response.data.total_pages,
+        current_page: page
+      });
+    } catch (error) {
+      console.error('Get trending movies error:', error);
+      res.status(500).json({ message: 'Error fetching trending movies' });
+    }
   }
-}
 
-static async getOnAirTVShows(req, res) {
-  try {
-    const page = req.query.page || 1;
-    const url = `${TMDB_BASE_URL}/tv/on_the_air?api_key=${TMDB_API_KEY}&page=${page}`;
-    const response = await axios.get(url);
-    res.json({
-      tvShows: response.data.results,
-      total_pages: response.data.total_pages,
-      current_page: page
-    });
-  } catch (error) {
-    console.error('Get on-air TV shows error:', error);
-    res.status(500).json({ message: 'Error fetching on-air TV shows' });
+  // ✅ Trending TV
+  static async getTrendingTVShows(req, res) {
+    try {
+      const page = req.query.page || 1;
+      const url = `${TMDB_BASE_URL}/trending/tv/day?api_key=${TMDB_API_KEY}&page=${page}`;
+      const response = await axios.get(url);
+
+      res.json({
+        tvShows: response.data.results,
+        total_pages: response.data.total_pages,
+        current_page: page
+      });
+    } catch (error) {
+      console.error('Get trending TV shows error:', error);
+      res.status(500).json({ message: 'Error fetching trending TV shows' });
+    }
   }
-}
 
-static async getSeasonDetails(req, res) {
-  try {
-    const { id, seasonNumber } = req.params;
-    const url = `${TMDB_BASE_URL}/tv/${id}/season/${seasonNumber}?api_key=${TMDB_API_KEY}`;
-    const response = await axios.get(url);
-    res.json(response.data);
-  } catch (error) {
-    console.error('Errore nel recupero dei dettagli stagione:', error.message);
-    res.status(500).json({ message: 'Errore nel recupero dei dettagli della stagione' });
+  // ✅ On Air TV
+  static async getOnAirTVShows(req, res) {
+    try {
+      const page = req.query.page || 1;
+      const url = `${TMDB_BASE_URL}/tv/on_the_air?api_key=${TMDB_API_KEY}&page=${page}`;
+      const response = await axios.get(url);
+
+      res.json({
+        tvShows: response.data.results,
+        total_pages: response.data.total_pages,
+        current_page: page
+      });
+    } catch (error) {
+      console.error('Get on-air TV shows error:', error);
+      res.status(500).json({ message: 'Error fetching on-air TV shows' });
+    }
   }
-}
 
-static async getEpisodeDetails(req, res) {
-  try {
-    const { id, seasonNumber, episodeNumber } = req.params;
-    const url = `${TMDB_BASE_URL}/tv/${id}/season/${seasonNumber}/episode/${episodeNumber}?api_key=${TMDB_API_KEY}`;
-    const response = await axios.get(url);
-    res.json(response.data);
-  } catch (error) {
-    console.error('Errore nel recupero dei dettagli episodio:', error.message);
-    res.status(500).json({ message: 'Errore nel recupero dei dettagli dell\'episodio' });
+  // ✅ Season Details
+  static async getSeasonDetails(req, res) {
+    try {
+      const { id, seasonNumber } = req.params;
+      const url = `${TMDB_BASE_URL}/tv/${id}/season/${seasonNumber}?api_key=${TMDB_API_KEY}`;
+      const response = await axios.get(url);
+
+      res.json(response.data);
+    } catch (error) {
+      console.error('Errore nel recupero dei dettagli stagione:', error.message);
+      res.status(500).json({ message: 'Errore nel recupero dei dettagli della stagione' });
+    }
   }
-}
 
+  // ✅ Episode Details
+  static async getEpisodeDetails(req, res) {
+    try {
+      const { id, seasonNumber, episodeNumber } = req.params;
+      const url = `${TMDB_BASE_URL}/tv/${id}/season/${seasonNumber}/episode/${episodeNumber}?api_key=${TMDB_API_KEY}`;
+      const response = await axios.get(url);
 
-
-
-
-
-
-
-
-
+      res.json(response.data);
+    } catch (error) {
+      console.error('Errore nel recupero dei dettagli episodio:', error.message);
+      res.status(500).json({ message: 'Errore nel recupero dei dettagli dell\'episodio' });
+    }
+  }
 }
 
 module.exports = MovieController;

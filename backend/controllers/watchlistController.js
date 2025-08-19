@@ -21,10 +21,10 @@ class WatchlistController {
 
   static async removeFromWatchlist(req, res) {
     try {
-      const { movie_id } = req.params;
+      const { movie_id, type } = req.params;
       const user_id = req.userId;
 
-      const removed = await Watchlist.remove(user_id, movie_id);
+      const removed = await Watchlist.remove(user_id, movie_id,type);
       
       if (!removed) {
         return res.status(404).json({ message: 'Movie not found in watchlist' });
