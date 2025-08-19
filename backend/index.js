@@ -37,30 +37,32 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' });
 });
 
-// Serve React frontend
+// Serve React frontend in production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'frontend/build')));
+  const frontendBuildPath = path.join(__dirname, 'frontend/build');
+  app.use(express.static(frontendBuildPath));
   
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend/build', 'index.html'));
+    res.sendFile(path.join(frontendBuildPath, 'index.html'));
   });
 }
 
-// 🔹 Log sicuro di tutte le route attive
+// 🔹 Debug: log dettagliato di tutte le route
 const listRoutes = () => {
-  if (!app._router) return; // protezione se _router non esiste
+  if (!app._router) return;
   console.log('=== Lista di tutte le route attive ===');
-  app._router.stack.forEach((middleware) => {
-    if (middleware.route) {
-      console.log(middleware.route.path);
-    } else if (middleware.name === 'router' && middleware.handle.stack) {
-      middleware.handle.stack.forEach((handler) => {
-        if (handler.route) {
-          console.log(handler.route.path);
-        }
-      });
-    }
-  });
+
+  const printStack = (stack, prefix = '') => {
+    stack.forEach((middleware) => {
+      if (middleware.route) {
+        console.log(`${prefix}Route: ${middleware.route.path} | Metodi: ${Object.keys(middleware.route.methods).join(', ')}`);
+      } else if (middleware.name === 'router' && middleware.handle.stack) {
+        printStack(middleware.handle.stack, prefix + '  ');
+      }
+    });
+  };
+
+  printStack(app._router.stack);
   console.log('=== Fine lista ===');
 };
 listRoutes();
