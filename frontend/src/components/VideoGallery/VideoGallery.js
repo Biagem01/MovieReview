@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './VideoGallery.css';
 
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
 const VideoGallery = ({ id, type }) => {
   const [videos, setVideos] = useState([]);
 
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await axios.get(`/api/movies/${type}/${id}/videos`);
+        const response = await axios.get(`${BASE_URL}/api/movies/${type}/${id}/videos`);
         setVideos(response.data.videos || []);
       } catch (error) {
         console.error('Errore nel caricamento dei video:', error);

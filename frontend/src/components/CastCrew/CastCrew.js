@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './CastCrew.css';
 
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
 const CastCrew = ({ id, type }) => {
   const [cast, setCast] = useState([]);
   const [crew, setCrew] = useState([]);
@@ -10,7 +12,7 @@ const CastCrew = ({ id, type }) => {
   useEffect(() => {
     const fetchCredits = async () => {
       try {
-        const response = await axios.get(`/api/movies/${type}/${id}/credits`);
+        const response = await axios.get(`${BASE_URL}/api/movies/${type}/${id}/credits`);
         setCast(response.data.cast || []);
         setCrew(response.data.crew || []);
       } catch (error) {

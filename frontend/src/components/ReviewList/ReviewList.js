@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './ReviewList.css';
 
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
 const ReviewList = ({ reviews, currentUser }) => {
   const [likes, setLikes] = useState({}); 
   // { reviewId: {likes: n, dislikes: m, userLike: 'like' | 'dislike' | null } }
@@ -11,11 +13,11 @@ const ReviewList = ({ reviews, currentUser }) => {
       const formatted = {};
       for (const review of reviews) {
         try {
-          const reactionsRes = await axios.get(`/api/review-likes/${review.id}/reactions`);
+          const reactionsRes = await axios.get(`${BASE_URL}/api/review-likes/${review.id}/reactions`);
           
           let userReaction = null;
           if (currentUser) {
-            const userReactionRes = await axios.get(`/api/review-likes/${review.id}/user-reaction`);
+            const userReactionRes = await axios.get(`${BASE_URL}/api/review-likes/${review.id}/user-reaction`);
             userReaction = userReactionRes.data.reaction;
           }
 
@@ -45,7 +47,7 @@ const ReviewList = ({ reviews, currentUser }) => {
 
     try {
       const is_like = type === 'like' ? 1 : 0;
-      await axios.post(`/api/review-likes/${reviewId}/reaction`, { is_like });
+      await axios.post(`${BASE_URL}/api/review-likes/${reviewId}/reaction`, { is_like });
 
       setLikes(prev => {
         const current = prev[reviewId] || { likes: 0, dislikes: 0, userLike: null };

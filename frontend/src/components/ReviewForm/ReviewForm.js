@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './ReviewForm.css';
 
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
 const StarRating = ({ rating, setRating, selectedStar, setSelectedStar }) => {
   return (
     <div className="star-rating">
@@ -95,9 +97,9 @@ const ReviewForm = ({ movieId,type, existingReview, onReviewSubmit }) => {
       };
 
       if (existingReview) {
-        await axios.put(`/api/reviews/${existingReview.id}`, reviewData);
+        await axios.put(`${BASE_URL}/api/reviews/${existingReview.id}`, reviewData);
       } else {
-        await axios.post('/api/reviews', reviewData);
+        await axios.post(`${BASE_URL}/api/reviews`, reviewData);
       }
 
       onReviewSubmit();
@@ -118,7 +120,7 @@ const ReviewForm = ({ movieId,type, existingReview, onReviewSubmit }) => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/api/reviews/${existingReview.id}`);
+      await axios.delete(`${BASE_URL}/api/reviews/${existingReview.id}`);
       onReviewSubmit();
     } catch (error) {
       console.error('Error deleting review:', error);

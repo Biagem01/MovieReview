@@ -4,6 +4,8 @@ import axios from 'axios';
 import MovieCard from '../MovieCard/MovieCard';
 import './SimilarContent.css';
 
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
 const SimilarContent = ({ id, type }) => {
   const [similar, setSimilar] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,7 +13,7 @@ const SimilarContent = ({ id, type }) => {
   useEffect(() => {
     const fetchSimilar = async () => {
       try {
-        const response = await axios.get(`/api/movies/${type}/${id}/similar`);
+        const response = await axios.get(`${BASE_URL}/api/movies/${type}/${id}/similar`);
         setSimilar(response.data.results || []);
       } catch (error) {
         console.error('Errore nel recupero dei contenuti simili:', error);

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './SeasonDetail.css'; // Se vuoi, puoi aggiungere uno stile dedicato
 
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
 const SeasonDetail = ({ tvId, seasonNumber }) => {
   const [seasonData, setSeasonData] = useState(null);
   const [selectedEpisode, setSelectedEpisode] = useState(null);
@@ -15,7 +17,7 @@ const SeasonDetail = ({ tvId, seasonNumber }) => {
     const fetchSeason = async () => {
       setLoadingSeason(true);
       try {
-        const res = await axios.get(`/api/movies/tv/${tvId}/season/${seasonNumber}`);
+        const res = await axios.get(`${BASE_URL}/api/movies/tv/${tvId}/season/${seasonNumber}`);
         setSeasonData(res.data);
         setSelectedEpisode(null);
         setEpisodeDetails(null);
@@ -33,7 +35,7 @@ const SeasonDetail = ({ tvId, seasonNumber }) => {
   const fetchEpisode = async (episodeNumber) => {
     setLoadingEpisode(true);
     try {
-      const res = await axios.get(`/api/movies/tv/${tvId}/season/${seasonNumber}/episode/${episodeNumber}`);
+      const res = await axios.get(`${BASE_URL}/api/movies/tv/${tvId}/season/${seasonNumber}/episode/${episodeNumber}`);
       setEpisodeDetails(res.data);
       setSelectedEpisode(episodeNumber);
     } catch (err) {
