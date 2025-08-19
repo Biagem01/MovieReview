@@ -5,16 +5,16 @@ import MovieCard from '../../components/MovieCard/MovieCard';
 import Pagination from '../../components/Pagination/Pagination';
 import '../Home/Home.css';
 
-
 const MAX_TOTAL_PAGES = 500;
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 const BrowseSection = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const searchParams = new URLSearchParams(location.search);
-  const section = searchParams.get('section') || 'popular'; // es: trending, now-playing, popular, top-rated
-  const type = searchParams.get('type') || 'movie'; // movie o tv
+  const section = searchParams.get('section') || 'popular';
+  const type = searchParams.get('type') || 'movie';
 
   const [items, setItems] = useState([]);
   const [genres, setGenres] = useState([]);
@@ -24,7 +24,7 @@ const BrowseSection = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setCurrentPage(1); // resetta pagina quando cambiano sezione o tipo
+    setCurrentPage(1);
     setSelectedGenre('');
   }, [section, type]);
 
@@ -43,7 +43,7 @@ const BrowseSection = () => {
       return;
     }
     try {
-      const response = await axios.get('/api/movies/genres');
+      const response = await axios.get(`${BASE_URL}/api/movies/genres`);
       setGenres(response.data.genres || []);
     } catch (error) {
       console.error('Error fetching genres:', error);
@@ -57,33 +57,30 @@ const BrowseSection = () => {
       let endpoint = '';
       let params = { page: currentPage };
 
-   switch (section) {
-  case 'trending':
-    endpoint = type === 'movie' ? `/api/movies/trending` : `/api/movies/trending-tv`;
-    break;
-  case 'now-playing':
-    endpoint = type === 'movie' ? `/api/movies/now-playing` : `/api/movies/on-air`;
-    break;
-  case 'top-rated':
-    endpoint = type === 'movie' ? `/api/movies/top-rated` : `/api/movies/tv/top-rated`;
-    break;
-  case 'upcoming':
-    endpoint = `/api/movies/upcoming`; // gestito da controller con type nel query param
-    params.type = type;
-    break;
-  case 'popular':
-  default:
-    endpoint = type === 'movie' ? `/api/movies/popular` : `/api/movies/popular-tv`;
-}
-
-
+      switch (section) {
+        case 'trending':
+          endpoint = type === 'movie' ? `/api/movies/trending` : `/api/movies/trending-tv`;
+          break;
+        case 'now-playing':
+          endpoint = type === 'movie' ? `/api/movies/now-playing` : `/api/movies/on-air`;
+          break;
+        case 'top-rated':
+          endpoint = type === 'movie' ? `/api/movies/top-rated` : `/api/movies/tv/top-rated`;
+          break;
+        case 'upcoming':
+          endpoint = `/api/movies/upcoming`;
+          params.type = type;
+          break;
+        case 'popular':
+        default:
+          endpoint = type === 'movie' ? `/api/movies/popular` : `/api/movies/popular-tv`;
+      }
 
       if (type === 'movie' && selectedGenre) {
         params.genre = selectedGenre;
       }
 
-      const response = await axios.get(endpoint, { params });
-
+      const response = await axios.get(`${BASE_URL}${endpoint}`, { params });
       const dataItems = type === 'movie' ? response.data.movies : response.data.tvShows;
 
       setItems(dataItems || []);

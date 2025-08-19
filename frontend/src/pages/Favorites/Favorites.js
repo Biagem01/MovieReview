@@ -3,6 +3,8 @@ import axios from 'axios';
 import MovieCard from '../../components/MovieCard/MovieCard';
 import './Lists.css';
 
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
 const Favorites = () => {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,11 +15,12 @@ const Favorites = () => {
 
   const fetchFavorites = async () => {
     try {
-      const response = await axios.get('/api/favorites');
+      const response = await axios.get(`${BASE_URL}/api/favorites`);
       // Assumendo che il backend risponda con { favorites: [...] }
-      setFavorites(response.data.favorites);
+      setFavorites(response.data.favorites || []);
     } catch (error) {
       console.error('Error fetching favorites:', error);
+      setFavorites([]);
     } finally {
       setLoading(false);
     }
@@ -38,7 +41,11 @@ const Favorites = () => {
       ) : (
         <div className="movies-grid">
           {favorites.map(favorite => (
-            <MovieCard key={favorite.movie_id} movie={favorite} />
+            <MovieCard
+              key={favorite.movie_id}
+              movie={favorite}
+              contentType="movie"
+            />
           ))}
         </div>
       )}

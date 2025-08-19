@@ -11,6 +11,8 @@ import SeasonDetail from '../../components/SeasonDetail/SeasonDetail';  // Impor
 
 import './MovieDetail.css';
 
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
 const MovieDetail = () => {
   const { type, id } = useParams();
   const location = useLocation();
@@ -44,7 +46,7 @@ const MovieDetail = () => {
 
   const fetchMovieDetails = async () => {
     try {
-      const backendResponse = await axios.get(`/api/movies/${type}/${id}`);
+      const backendResponse = await axios.get(`${BASE_URL}/api/movies/${type}/${id}`);
       const backendMovie = backendResponse.data.data;
 
       const tmdbResponse = await axios.get(
@@ -79,7 +81,7 @@ const MovieDetail = () => {
 
   const fetchReviews = async () => {
     try {
-      const response = await axios.get(`/api/reviews/${type}/${id}`);
+      const response = await axios.get(`${BASE_URL}/api/reviews/${type}/${id}`);
       setReviews(response.data.reviews);
     } catch (error) {
       console.error('Errore durante il fetch delle recensioni utenti:', error);
@@ -100,7 +102,7 @@ const MovieDetail = () => {
 
   const fetchUserReview = async () => {
     try {
-      const response = await axios.get(`/api/reviews/user/${currentUser.id}/${type}/${id}`);
+      const response = await axios.get(`${BASE_URL}/api/reviews/user/${currentUser.id}/${type}/${id}`);
       setUserReview(response.data);
     } catch (err) {
       if (err.response && err.response.status === 404) {
@@ -113,7 +115,7 @@ const MovieDetail = () => {
 
   const checkFavoriteStatus = async () => {
     try {
-      const response = await axios.get(`/api/favorites/check/${id}`, { params: { type } });
+      const response = await axios.get(`${BASE_URL}/api/favorites/check/${id}`, { params: { type } });
       setIsFavorite(response.data.isFavorite);
     } catch (error) {
       console.error('Errore nel check dei preferiti:', error);
@@ -122,7 +124,7 @@ const MovieDetail = () => {
 
   const checkWatchlistStatus = async () => {
     try {
-      const response = await axios.get(`/api/watchlist/check/${id}`, { params: { type } });
+      const response = await axios.get(`${BASE_URL}/api/watchlist/check/${id}`, { params: { type } });
       setInWatchlist(response.data.inWatchlist);
     } catch (error) {
       console.error('Errore nel check della watchlist:', error);
@@ -132,10 +134,10 @@ const MovieDetail = () => {
   const handleFavoriteToggle = async () => {
     try {
       if (isFavorite) {
-        await axios.delete(`/api/favorites/${type}/${id}`);
+        await axios.delete(`${BASE_URL}/api/favorites/${type}/${id}`);
         setIsFavorite(false);
       } else {
-        await axios.post('/api/favorites', { ...movie, type });
+        await axios.post(`${BASE_URL}/api/favorites`, { ...movie, type });
         setIsFavorite(true);
       }
     } catch (error) {
@@ -146,10 +148,10 @@ const MovieDetail = () => {
   const handleWatchlistToggle = async () => {
     try {
       if (inWatchlist) {
-        await axios.delete(`/api/watchlist/${type}/${id}`);
+        await axios.delete(`${BASE_URL}/api/watchlist/${type}/${id}`);
         setInWatchlist(false);
       } else {
-        await axios.post('/api/watchlist', { movie_id: id, type });
+        await axios.post(`${BASE_URL}/api/watchlist`, { movie_id: id, type });
         setInWatchlist(true);
       }
     } catch (error) {
