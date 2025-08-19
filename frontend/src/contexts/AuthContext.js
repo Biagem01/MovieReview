@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 
-const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+const BASE_URL = process.env.REACT_APP_BACKEND_URL; // URL del backend in produzione
 
 const AuthContext = createContext();
 
@@ -12,28 +12,16 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('token'));
 
+  // Imposta baseURL e Authorization header se esiste il token
   useEffect(() => {
-    // Imposta baseURL di Axios
     axios.defaults.baseURL = BASE_URL;
 
-    // Interceptor per aggiungere sempre il token corrente
-    const interceptor = axios.interceptors.request.use(config => {
-      const storedToken = localStorage.getItem('token');
-      if (storedToken) {
-        config.headers['Authorization'] = `Bearer ${storedToken}`;
-      } else {
-        delete config.headers['Authorization'];
-      }
-      return config;
-    });
-
     if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       fetchUser();
     } else {
       setLoading(false);
     }
-
-    return () => axios.interceptors.request.eject(interceptor);
   }, [token]);
 
   // Fetch dell'utente loggato
@@ -58,6 +46,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', token);
       setToken(token);
       setCurrentUser(user);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
       return { success: true };
     } catch (error) {
@@ -86,6 +75,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     setToken(null);
     setCurrentUser(null);
+    delete axios.defaults.headers.common['Authorization'];
   };
 
   const value = { currentUser, login, register, logout, loading };
