@@ -6,7 +6,9 @@ Progetto sviluppato a scopo formativo per mettere in pratica tecnologie frontend
 
 ---
 
-# DEMO https://movie-review-alpha-red.vercel.app/
+# DEMO 
+
+https://movie-review-alpha-red.vercel.app/
 
 ## 🚀 Funzionalità principali
 
