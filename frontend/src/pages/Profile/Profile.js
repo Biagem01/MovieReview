@@ -8,7 +8,7 @@ import './Profile.css';
 const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Profile = () => {
-  const { currentUser, updateCurrentUser } = useAuth(); // Aggiornato: prendo anche la funzione per aggiornare lo state
+  const { currentUser, updateCurrentUser } = useAuth();
   const { fetchUnreadCount } = useNotification();
   const navigate = useNavigate();
 
@@ -22,17 +22,13 @@ const Profile = () => {
   const [notifications, setNotifications] = useState([]);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
 
-  // Fetch user reviews
+  // --- Fetch user reviews ---
   useEffect(() => {
     if (!currentUser) return;
 
     const fetchReviews = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/api/reviews/user`, {
-          headers: {
-            'Authorization': `Bearer ${currentUser.token}`
-          }
-        });
+        const res = await axios.get(`${BASE_URL}/api/reviews/user`);
         const allReviews = res.data.reviews || [];
         setMovieReviews(allReviews.filter(r => r.type === 'movie'));
         setTvReviews(allReviews.filter(r => r.type === 'tv'));
@@ -46,17 +42,13 @@ const Profile = () => {
     fetchReviews();
   }, [currentUser]);
 
-  // Fetch notifications
+  // --- Fetch notifications ---
   useEffect(() => {
     if (!currentUser) return;
 
     const fetchNotifications = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/api/notifications`, {
-          headers: {
-            'Authorization': `Bearer ${currentUser.token}`
-          }
-        });
+        const res = await axios.get(`${BASE_URL}/api/notifications`);
         setNotifications(Array.isArray(res.data.notifications) ? res.data.notifications : []);
       } catch (err) {
         console.error('Errore nel caricamento notifiche:', err);
@@ -69,13 +61,10 @@ const Profile = () => {
     fetchNotifications();
   }, [currentUser]);
 
+  // --- Mark notification as read ---
   const markAsRead = async (notificationId) => {
     try {
-      await axios.put(`${BASE_URL}/api/notifications/${notificationId}/read`, {}, {
-        headers: {
-          'Authorization': `Bearer ${currentUser.token}`
-        }
-      });
+      await axios.put(`${BASE_URL}/api/notifications/${notificationId}/read`);
       setNotifications(prev =>
         prev.map(n => (n.id === notificationId ? { ...n, is_read: 1 } : n))
       );
@@ -85,8 +74,10 @@ const Profile = () => {
     }
   };
 
+  // --- Handle file selection ---
   const handleFileSelect = (e) => setSelectedFile(e.target.files[0]);
 
+  // --- Upload profile image ---
   const handleImageUpload = async () => {
     if (!selectedFile) return;
     const formData = new FormData();
@@ -94,11 +85,8 @@ const Profile = () => {
 
     setUploading(true);
     try {
-      const res = await axios.put(`${BASE_URL}/api/auth/profile/image`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${currentUser.token}`
-        }
+      const res = await axios.post(`${BASE_URL}/api/auth/profile-image`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
 
       // Aggiorna currentUser con la nuova immagine
@@ -122,7 +110,7 @@ const Profile = () => {
           <div className="profile-info">
             <div className="profile-image-section">
               {currentUser?.profile_image ? (
-                <img src={`${BASE_URL}/uploads/${currentUser.profile_image}`} alt="Profile" className="profile-image" />
+                <img src={`${BASE_URL}/uploads/profiles/${currentUser.profile_image}`} alt="Profile" className="profile-image" />
               ) : (
                 <div className="default-avatar">{currentUser?.username?.charAt(0).toUpperCase()}</div>
               )}
