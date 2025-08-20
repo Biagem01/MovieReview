@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 
-const BASE_URL = process.env.REACT_APP_BACKEND_URL; // URL del backend in produzione
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 const AuthContext = createContext();
 
@@ -12,7 +12,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('token'));
 
-  // Imposta baseURL e Authorization header se esiste il token
   useEffect(() => {
     axios.defaults.baseURL = BASE_URL;
 
@@ -24,7 +23,6 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  // Fetch dell'utente loggato
   const fetchUser = async () => {
     try {
       const response = await axios.get('/api/auth/me');
@@ -37,7 +35,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Login
   const login = async (email, password) => {
     try {
       const response = await axios.post('/api/auth/login', { email, password });
@@ -57,7 +54,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Registrazione
   const register = async (username, email, password) => {
     try {
       await axios.post('/api/auth/register', { username, email, password });
@@ -70,7 +66,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout
   const logout = () => {
     localStorage.removeItem('token');
     setToken(null);
@@ -78,7 +73,12 @@ export const AuthProvider = ({ children }) => {
     delete axios.defaults.headers.common['Authorization'];
   };
 
-  const value = { currentUser, login, register, logout, loading };
+  // Nuova funzione per aggiornare currentUser senza fare refresh
+  const updateCurrentUser = (updatedFields) => {
+    setCurrentUser(prev => ({ ...prev, ...updatedFields }));
+  };
+
+  const value = { currentUser, login, register, logout, loading, updateCurrentUser };
 
   return (
     <AuthContext.Provider value={value}>

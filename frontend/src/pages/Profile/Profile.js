@@ -8,7 +8,7 @@ import './Profile.css';
 const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Profile = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, updateCurrentUser } = useAuth(); // Aggiornato: prendo anche la funzione per aggiornare lo state
   const { fetchUnreadCount } = useNotification();
   const navigate = useNavigate();
 
@@ -28,7 +28,11 @@ const Profile = () => {
 
     const fetchReviews = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/api/reviews/user`);
+        const res = await axios.get(`${BASE_URL}/api/reviews/user`, {
+          headers: {
+            'Authorization': `Bearer ${currentUser.token}`
+          }
+        });
         const allReviews = res.data.reviews || [];
         setMovieReviews(allReviews.filter(r => r.type === 'movie'));
         setTvReviews(allReviews.filter(r => r.type === 'tv'));
@@ -48,7 +52,11 @@ const Profile = () => {
 
     const fetchNotifications = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/api/notifications`);
+        const res = await axios.get(`${BASE_URL}/api/notifications`, {
+          headers: {
+            'Authorization': `Bearer ${currentUser.token}`
+          }
+        });
         setNotifications(Array.isArray(res.data.notifications) ? res.data.notifications : []);
       } catch (err) {
         console.error('Errore nel caricamento notifiche:', err);
@@ -63,7 +71,11 @@ const Profile = () => {
 
   const markAsRead = async (notificationId) => {
     try {
-      await axios.put(`${BASE_URL}/api/notifications/${notificationId}/read`);
+      await axios.put(`${BASE_URL}/api/notifications/${notificationId}/read`, {}, {
+        headers: {
+          'Authorization': `Bearer ${currentUser.token}`
+        }
+      });
       setNotifications(prev =>
         prev.map(n => (n.id === notificationId ? { ...n, is_read: 1 } : n))
       );
@@ -82,13 +94,22 @@ const Profile = () => {
 
     setUploading(true);
     try {
-      alert('Qui implementeresti l\'upload dell\'immagine di profilo');
+      const res = await axios.put(`${BASE_URL}/api/auth/profile/image`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${currentUser.token}`
+        }
+      });
+
+      // Aggiorna currentUser con la nuova immagine
+      updateCurrentUser({ ...currentUser, profile_image: res.data.profile_image });
+      setSelectedFile(null);
+      alert('Immagine caricata con successo!');
     } catch (err) {
       console.error('Errore upload immagine:', err);
       alert('Errore caricamento immagine');
     } finally {
       setUploading(false);
-      setSelectedFile(null);
     }
   };
 
@@ -101,7 +122,7 @@ const Profile = () => {
           <div className="profile-info">
             <div className="profile-image-section">
               {currentUser?.profile_image ? (
-                <img src={`/uploads/profiles/${currentUser.profile_image}`} alt="Profile" className="profile-image" />
+                <img src={`${BASE_URL}/uploads/${currentUser.profile_image}`} alt="Profile" className="profile-image" />
               ) : (
                 <div className="default-avatar">{currentUser?.username?.charAt(0).toUpperCase()}</div>
               )}

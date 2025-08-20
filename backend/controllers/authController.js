@@ -104,6 +104,32 @@ class AuthController {
       res.status(500).json({ message: 'Server error' });
     }
   }
+
+  static async updateProfileImage(req, res) {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'Nessun file caricato' });
+    }
+
+    const filename = req.file.filename;
+
+    // Usa il metodo generico già pronto
+    const updated = await User.updateProfile(req.userId, { profile_image: filename });
+
+    if (!updated) {
+      return res.status(400).json({ message: 'Aggiornamento fallito' });
+    }
+
+    res.json({
+      message: 'Immagine profilo aggiornata',
+      profile_image: filename
+    });
+  } catch (error) {
+    console.error('Errore update immagine:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
 }
 
 module.exports = AuthController;
