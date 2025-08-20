@@ -31,8 +31,7 @@ https://movie-review-alpha-red.vercel.app/
 |--------------------|----------------------------------------|
 | Frontend (SPA)     | React.js, React Router, Context API     |
 | Backend API        | Node.js, Express.js                    |
-| Database           | MySQL                                  |
-| Autenticazione     | JWT + Middleware                        |
+| Database           | MySQL                                  |                   |
 | API esterne        | **The Movie Database** (TMDb)          |
 | Extra              | Upload file immagine profilo + Notifiche|
 
