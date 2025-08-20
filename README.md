@@ -14,11 +14,10 @@ https://movie-review-alpha-red.vercel.app/
 
 - Ricerca film e serie TV via **TMDb API**
 - Pagina dettaglio completa con **cast, trailer e stagioni/episodi**
-- **Autenticazione & registrazione utenti** (JWT)
 - Sistema di **recensioni (CRUD)** + *“Mi piace”*
 - Sezione **Preferiti** e **Watchlist personale**
 - **Pagina profilo utente**
-- 📬 **Notifiche real time** per azioni social
+- 📬 **Notifiche real time** per azioni social ( Ad esempio quando qualcuno mette mi piace a un tuo commento spunta la notifica su profile)
 - Home con caroselli dinamici (Trending, Now Playing, Upcoming…)
 - **Navbar responsive** + hamburger mobile
 - Backend RESTful Node/Express + Database MySQL
