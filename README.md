@@ -36,6 +36,14 @@ https://movie-review-alpha-red.vercel.app/
 
 ---
 
+
+# Deployment
+Client Side: The front end of Harmony is deployed on Vercel.
+
+Server Side: The back end of Harmony is deployed on Render.
+
+
+
 #Installazione
 
 1. Clona il progetto
